@@ -6,7 +6,7 @@ Other names of Memory Consistency:
 - Memory Consistency Model
 - Memory Model
 
-Memory consistecy is a precise, architecturally visible definition of the shared memory correctness. It provides rules about loads and stores and how they act upon memory.
+Memory consistecy is a precise, architecturally visible definition of the shared memory correctness. It provides rules about loads and stores and how they act upon memory. When we say correctness, we mean not violating the program order which is arranged by the programmer. If any architect is going to change the order of accesses to the memory, he has to do it in a way that the result is not going to be something else than what is specified in the program by the programmer.
 
 As a part of this consistency model support, the hardware provides cache coherence (coherence).
 
