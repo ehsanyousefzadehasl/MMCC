@@ -21,4 +21,4 @@ Problem with shared memory system with several caches is that the cached calues 
 Then In the following sections, I will try to summarize the new concepts that I learned.
 
 1. [Coherence Basics](01-coherence_basics.md)
-2. [Memory Consistency and SC](01-coherence_basics.md)
+2. [Memory Consistency and SC](02-MC_SC.md)
