@@ -41,4 +41,15 @@ In gist to this point, a memory model specifies the allowed behavior of multithr
 - A memory consistency implementation can use cache coherence as a useful "BLACK BOX".
 
 ## SEQUENTIAL CONSISTENCY (SC)
+The most intuitive memory consistency model is sequential consistency (SC). In this model, the order of execution is the same as specified in the program by the programmer. The following figure shows the possible execution of the first program on two cores that respect SC.
+
+![exe on a SC system](img/SC_execution.jpg)
+
+**NOTE**: The only non-determinism, especially in this example, is the number of times flag is loaded to be set to be able not to jump and then load R2 with new data, which is not important.
+
+The following figures show different outcomes of execution the second multi-threaded program under SC.
+
+![sc2](img/SC2-exe.jpg)
+
+The final emphasis is that SC respects program order specified by the programmer. Memory order always respects the program order.
 
