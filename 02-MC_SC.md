@@ -53,3 +53,27 @@ The following figures show different outcomes of execution the second multi-thre
 
 The final emphasis is that SC respects program order specified by the programmer. Memory order always respects the program order.
 
+## SC Implementations
+### NAIVE
+The terrible implementation of SC can be running a multi-threaded program on a single core by contex-switching between two threads.
+
+![terrible implmentation of SC](img/Terrible_implementation_of_SC.png)
+
+### Switch
+Each core does its memory operations to the switch one at a time in its program order. Cores can do any optimizations that do not affect the order in which it presents memory operations to the switch. The switch allocation to cores can be done in any policy, for example: switch picks cores randomly or from their index (smaller has higher priority) and wait to satisfy all of their accesses or just let them to do just one access or how many it distinguishes is ok.
+
+![Switch Implementation of SC](img/SC_switch.png)
+
+However, these implementation are terrible with regard to performance because for example if we have 100 cores, so what is going to happen?
+
+### A BASIC IMPLEMENTATION WITH CACHE COHERENCE
+Cache coherence facilitates SC implementations that can execute non-conflicting loads and stores (to different addresses) completely in parallel. Instead of having a switch, we can replace it with a black-box cache coherent memory system.
+
+### Optimized SC Implementation with Cache Coherence
+Cores employ optimizatino techniques like prefetching, speculative execution, multi-threading in order to improve performance and tolerate memory access latencies. However, all of these techniques are legal as long as it does not produce an end result that violates SC.
+
+Here I need to know about cache prefetch and speculative execution and Multi-threading!
+
+### Cache Prefetching
+### Speculative Execution
+### Multi-threading
