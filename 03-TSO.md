@@ -37,4 +37,19 @@ The following example shows possible executions of TSO, which first four ones ar
 
 **NOTE**: Programmers and compilers can prevent the execution of the TSO of the cases 5 and 6 in the above example by using FENCE instructions between stores and loads.
 
-**What does a FENCE instruction do?**:
+**What does a FENCE instruction do?**
+A fence instruction, memory fence, membar, or memory barrier, is a type of barrier instruction that causes a CPU or compiler to enforce an ordering constraint on memory operations issued before and after instruction. This typically means that operations issued prior to the barrier are guaranteed to be performed before operations issued after the barrier. Memory barriers are necessary because most modern CPUs employ performance optimizations that can result in out-of-order execution. This reordering of memory operations (loads and stores) normally goes unnoticed within a single thread of execution, but can cause unpredictable behaviour in concurrent programs and device drivers unless carefully controlled. The exact nature of an ordering constraint is hardware dependent and defined by the architecture's memory ordering model. Some architectures provide multiple barriers for enforcing different ordering constraints.
+
+
+**NOTE**: FENCEs are rarely used by programmers using TSO because it does the right thing for most programs. Nevertheless, FENCEs play an important role for the relaxed models.
+
+Following example shows another example of running a program under TSO memory model:
+
+![another example under TSO memory model with bypassing](img/TSO_with_bypassing.jpg)
+
+## Implementation of TSO
+Following figure shows 2 different implementations of TSO memory model. The implementation of TSO (Total Store Order) is similar to SC with the addition of per-core FIFO write buffers.
+
+![TSO implementations](img/TSO_implementations.jpg)
+
+**NOTE**: Multithreading introduces a subtle write buffer issue for TSO. TSO write buffers are logically private to each thread context. Thus, on a multithreaded core, one thread context should never bypass from the wrtie buffer of another thread context. This logical separation can be implemented with per-thread-context write buffers or by using a shared write buffer with entiries tagged by thread-context identifiers that permit bypassing only when tags match.
