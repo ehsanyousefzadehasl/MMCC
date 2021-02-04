@@ -3,11 +3,11 @@ Memory consistency models define the behavior of shared memory systems for progr
 
 In the following figure, everyone who looks at it expects that the r2 will be loaded with the new data, but in modern computers, it can be something else.
 
-![motivation of memory model definition](img/motivation.jpg)
+![motivation of memory model definition](../img/motivation.jpg)
 
 If core 1 is going to reorder the stores locally, so first it will set the flag to 1 then core 2 will fill r2 with the stale value.
 
-![problem of local stores re-ordering](img/store_reordering_causes_problem.jpg)
+![problem of local stores re-ordering](../img/store_reordering_causes_problem.jpg)
 
 **NOTE**: a core might reorder memory accesses locally as follows:
 - Store-Store Reordering: has no effect on a single-threaded execution 
@@ -18,13 +18,13 @@ If core 1 is going to reorder the stores locally, so first it will set the flag 
 
 Following figures show how orders can differ from execution to execution.
 
-![1](img/1.jpg)
+![1](../img/1.jpg)
 
-![2](img/2.jpg)
+![2](../img/2.jpg)
 
-![3](img/3.jpg)
+![3](../img/3.jpg)
 
-![4](img/4.jpg)
+![4](../img/4.jpg)
 
 For the last one local reordering is done.
 
@@ -43,13 +43,13 @@ In gist to this point, a memory model specifies the allowed behavior of multithr
 ## SEQUENTIAL CONSISTENCY (SC)
 The most intuitive memory consistency model is sequential consistency (SC). In this model, the order of execution is the same as specified in the program by the programmer. The following figure shows the possible execution of the first program on two cores that respect SC.
 
-![exe on a SC system](img/SC_execution.jpg)
+![exe on a SC system](../img/SC_execution.jpg)
 
 **NOTE**: The only non-determinism, especially in this example, is the number of times flag is loaded to be set to be able not to jump and then load R2 with new data, which is not important.
 
 The following figures show different outcomes of execution the second multi-threaded program under SC.
 
-![sc2](img/SC2-exe.jpg)
+![sc2](../img/SC2-exe.jpg)
 
 The final emphasis is that SC respects program order specified by the programmer. Memory order always respects the program order.
 
@@ -57,12 +57,12 @@ The final emphasis is that SC respects program order specified by the programmer
 ### NAIVE
 The terrible implementation of SC can be running a multi-threaded program on a single core by contex-switching between two threads.
 
-![terrible implmentation of SC](img/Terrible_implementation_of_SC.png)
+![terrible implmentation of SC](../img/Terrible_implementation_of_SC.png)
 
 ### Switch
 Each core does its memory operations to the switch one at a time in its program order. Cores can do any optimizations that do not affect the order in which it presents memory operations to the switch. The switch allocation to cores can be done in any policy, for example: switch picks cores randomly or from their index (smaller has higher priority) and wait to satisfy all of their accesses or just let them to do just one access or how many it distinguishes is ok.
 
-![Switch Implementation of SC](img/SC_switch.png)
+![Switch Implementation of SC](../img/SC_switch.png)
 
 However, these implementation are terrible with regard to performance because for example if we have 100 cores, so what is going to happen?
 

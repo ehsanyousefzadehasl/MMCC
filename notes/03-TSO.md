@@ -11,7 +11,7 @@ For a single-core processor, a write buffer can be made architecturally invisibl
 
 However, when in a processor there are several cores with write buffers, those write buffers will not continue to be architecturally invisible.
 
-![write buffer problem example](img/write_buffer_problem.jpg)
+![write buffer problem example](../img/write_buffer_problem.jpg)
 
 In the above example, core 1 and core 2 execute stores but they buffer the newly stored value **NEW** in their write buffer. Next, both cores perform their respective loads, L1 and L2, and obtain the old values. This is the result is forbidden by sequential consistency (SC). Without write buffers, the hardware is SC, but with write buffers it is not. The solution can be making write buffers visible by turning them off, but because of the performance improvement they provide, vendors do not like to turn them off or check the violations because it is very expensive and needs very complicated structures. So, the option chosen by SPARC and x86 was to abandon SC in favor of a memory consistency that allows straightword use of FIFO write buffers at each core. 
 
@@ -27,12 +27,12 @@ As we have known that SC model requires each core preserving the program order a
 
 However, TSO requires the first three constraints but not the forth, which this omission does not matter for most programs, which following example shows the case where TSO is exactly like SC.
 
-![TSO acts like SC in most programming idioms](img/TSO_acts_like_SC_in_most_programming_idioms.jpg)
+![TSO acts like SC in most programming idioms](../img/TSO_acts_like_SC_in_most_programming_idioms.jpg)
 
 
 The following example shows possible executions of TSO, which first four ones are valid executions in SC manner, but the fifth one is not.
 
-![TSO execution](img/possible_execution_outcomes_of_TSO.jpg)
+![TSO execution](../img/possible_execution_outcomes_of_TSO.jpg)
 
 
 **NOTE**: Programmers and compilers can prevent the execution of the TSO of the cases 5 and 6 in the above example by using FENCE instructions between stores and loads.
@@ -45,12 +45,12 @@ A fence instruction, memory fence, membar, or memory barrier, is a type of barri
 
 Following example shows another example of running a program under TSO memory model:
 
-![another example under TSO memory model with bypassing](img/TSO_with_bypassing.jpg)
+![another example under TSO memory model with bypassing](../img/TSO_with_bypassing.jpg)
 
 ## Implementation of TSO
 Following figure shows 2 different implementations of TSO memory model. The implementation of TSO (Total Store Order) is similar to SC with the addition of per-core FIFO write buffers.
 
-![TSO implementations](img/TSO_implementations.jpg)
+![TSO implementations](../img/TSO_implementations.jpg)
 
 **NOTE**: Multithreading introduces a subtle write buffer issue for TSO. TSO write buffers are logically private to each thread context. Thus, on a multithreaded core, one thread context should never bypass from the wrtie buffer of another thread context. This logical separation can be implemented with per-thread-context write buffers or by using a shared write buffer with entiries tagged by thread-context identifiers that permit bypassing only when tags match.
 

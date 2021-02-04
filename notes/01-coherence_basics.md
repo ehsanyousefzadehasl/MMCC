@@ -3,7 +3,7 @@ Following figure shows a multi-core system with single-threaded cores which each
 
 **Note**: The LLC, despite being on the processor chip, is logically a "memory-side cache" and thus does not introduce another level of coherence issue. It is logically just in front of the MM and serves to reduce the average latency of memory accesses and increase the memory's effective bandwidth. **The LLC also serves as an on-chip memory controller.**.
 
-![multi-core processor](img/01-basic_system.jpg)
+![multi-core processor](../img/01-basic_system.jpg)
 
 The major issue that causes incoherence: there multiple actors with access to caches and memory. These actors are:
 - Processor cores
@@ -18,7 +18,7 @@ Processor cores interact with the coherence protocol through a coherence interfa
 - write request
 It is shown in the following figure.
 
-![Coherence Interface](img/02-cohernece_interface.jpg)
+![Coherence Interface](../img/02-cohernece_interface.jpg)
 
 Cache Coherence Protocols are categorized into two groups (based on whether there is a clean separation of coherence from the consistency model or whether they are invisible):
 
@@ -36,7 +36,7 @@ In having a real vision on cache coherence, it is defined with two invariants:
 
 The following figure gives a vision on read-write epochs.
 
-![access epochs](img/03-access_epochs_in_time.jpg)
+![access epochs](../img/03-access_epochs_in_time.jpg)
 
 ### Granularity of cache coherence
 In theory, coherence could be performed at the finest load/store granularity. However, in practice, coherence is usually maintained at the granularity of **cache blocks**. In practice, the SWMR invariant is likely to be that, for any block of memory, there is either a single writer or some number of readers.

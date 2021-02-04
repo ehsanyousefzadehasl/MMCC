@@ -20,6 +20,7 @@ Problem with shared memory system with several caches is that the cached calues 
 
 Then In the following sections, I will try to summarize the new concepts that I learned.
 
-1. [Coherence Basics](01-coherence_basics.md)
-2. [Memory Consistency and SC](02-MC_SC.md)
-3. [Total Store Order and the x86 Memory Model](03-TSO.md)
+1. [Coherence Basics](notes/01-coherence_basics.md)
+2. [Memory Consistency and SC](notes/02-MC_SC.md)
+3. [Total Store Order and the x86 Memory Model](notes/03-TSO.md)
+4. [Relaxed Memory Consistency](notes/04-RMC.md)
