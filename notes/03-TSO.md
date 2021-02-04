@@ -53,3 +53,9 @@ Following figure shows 2 different implementations of TSO memory model. The impl
 ![TSO implementations](img/TSO_implementations.jpg)
 
 **NOTE**: Multithreading introduces a subtle write buffer issue for TSO. TSO write buffers are logically private to each thread context. Thus, on a multithreaded core, one thread context should never bypass from the wrtie buffer of another thread context. This logical separation can be implemented with per-thread-context write buffers or by using a shared write buffer with entiries tagged by thread-context identifiers that permit bypassing only when tags match.
+
+**NOTE**: The semantics of the FENCE specify that all instructions before the FENCE in program order must be ordered before any instruction after the FENCE in program order. For systems that support TSO, the FENCE thus prohibits a load from bypassing an earlier store.
+
+Because TSO permits only one type of reordering, FENCEs are infrequent and the implementation of FENCE instructions is not too critical. A simple implementation - such as draining the write buffer when a FENCE is executed and not permitting subsequent loads to execute until an earlier FENCE has committed - may provide acceptable performance.
+
+Finally, SC and TSO are pretty close, especially compared with the more complex and more relaxed memory consistecy models.
