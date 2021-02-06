@@ -24,3 +24,5 @@ Then In the following sections, I will try to summarize the new concepts that I 
 2. [Memory Consistency and SC](notes/02-MC_SC.md)
 3. [Total Store Order and the x86 Memory Model](notes/03-TSO.md)
 4. [Relaxed Memory Consistency](notes/04-RMC.md)
+
+ - [MM and CC in GPUs and HS](notes/CC_for_HS.md)
