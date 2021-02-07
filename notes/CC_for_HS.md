@@ -88,4 +88,36 @@ L2's FSM has four states:
 - Stalling L2 controller causes many threads to stall which finally results in total performance and throughput degradation.
 
 #### Consistency-directed temporal coherence
+Instead of making writes visible to all other threads **synchronously** like what we see in consistency-agnostic cache coherence protocols, we can focus on consistency-directed coherence protocols to propagate writes **asynchronously**, in this way the programmer has a key role by using FENCE instructions. For example, XC memory model does not require SWMR (Single Write Multiple Read).
 
+When a write request reaches the L2 and the block is shared, the L2 simply replies back to the thread initiating the write with the timestamp associated with the block. This time is refered as the **Global Write Completion Time (GWCT)** indicating that the time until which the thread must stall upon hitting a FENCE instruction in order to ensure that the write has become globally visible to all threads (Transferring some stalls from the L2 to the SM - L2 is so critical to the total performance of the GPU).
+
+For each thread mapped to an SM, the SM keeps track of the maximum of GWCTs returned for the writes in the per-thread stall-time register. Upon **hitting a FENCE**, stalling the thread until this time ensures that all of the writes before the FENCE have become globally visible.
+
+**NOTE**: The main difference with the L1 controller is due to the fact that that Write-Acks from the L2 now carry GWCTs. Accordingly, upon receiving a Write-Ack, the L1 controller extends the stall-time if the incoming GWCT is greater than the currently held stall-time for that thread (Upon htting a FENCE, the thread is stalled until the time held in the stall-time register).
+
+**Benefit compared to the consistency-agnostic coherence**: This approach eliminates expensive stalling at the L2; instead writes stall at the SM upon hitting a FENCE.
+
+**Possibility**: More optimizations are possible that further reduce salling.
+
+In the following figures FSMs of the L1 and L2 controllers are drawn.
+
+![L1 FSM in consistency-directed coherence](../img/temporal_coherence_consistency-directed_L1_FSM.jpg)
+
+![L2 FSM in consistency-directed coherence](../img/temporal_coherence_consistency-directed_L2_FSM.jpg)
+
+Critical limitations of temporal coherence:
+- Its inclusive L2 cache. Supporting a non-inclusive L2 cache is cumbersome because when a block is valid in one or more L1s must have its lease time available at the L2. If the L2 is going to be non-inclusive, on eviction the lease should be kept somewhere like MSHRs (Miss Status Holding Register).
+
+- Global Timestamp: Keeping this time for modern GPUs with a relatively large area could be hard. X. Ren et al. proposed a variant of temporal coherence without using global timestamp:
+
+
+X. Ren and M. Lis. "Efficient sequential consistency in GPUs via relativistic cache coherence", HPCA 2017
+
+- Performance is sensitive to the choice of the lease period.
+  - Too short lease time = increasing L1 miss
+  - Too long lease time = longer stalls
+
+- No taking advantage of scoped synchronization. For example, writes in a CTA don't need to be made visible to all threads from other SMs.
+
+### Release Consistency-directed coherence
