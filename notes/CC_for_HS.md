@@ -121,3 +121,7 @@ X. Ren and M. Lis. "Efficient sequential consistency in GPUs via relativistic ca
 - No taking advantage of scoped synchronization. For example, writes in a CTA don't need to be made visible to all threads from other SMs.
 
 ### Release Consistency-directed coherence
+RCC: Release Consistency-directed Coherence enforcing release consistency (RC), which differs from XC by distinguishing acquires from releases, whereas XC treats all synchronization the same.
+
+RCC compromises on flexibility, in that it can only enforce variants of RC. But, for this reduced flexibility, RCC is arguably **simpler**, can naturally **exploit scope information** and can be made to work with **non-inclusive L2 cache**.
+
