@@ -123,5 +123,54 @@ X. Ren and M. Lis. "Efficient sequential consistency in GPUs via relativistic ca
 ### Release Consistency-directed coherence
 RCC: Release Consistency-directed Coherence enforcing release consistency (RC), which differs from XC by distinguishing acquires from releases, whereas XC treats all synchronization the same.
 
-RCC compromises on flexibility, in that it can only enforce variants of RC. But, for this reduced flexibility, RCC is arguably **simpler**, can naturally **exploit scope information** and can be made to work with **non-inclusive L2 cache**.
+**NOTE**: RCC compromises on flexibility, in that it can only enforce variants of RC. But, for this reduced flexibility, RCC is arguably **simpler**, can naturally **exploit scope information** and can be made to work with **non-inclusive L2 cache**.
 
+The afore discussed RC has special atomic operations that order memory accesses in one direction as opposed to the bidirectional ordering enforced by a FENCE. Specially, RC has a release (Rel) store and an acquire (Acq) load that enforce the following orderings.
+- **Acq** Load -> Load/ Store
+- Load/ Store -> **Rel** Store
+- **Rel** Store/ **Acqu** Load -> **Rel** Store/ **Acq** Load
+
+Just for having a deep understading of what is going on when we say Rel Store and Acq load, recall the following figure:
+
+![acq load, and rel store](../img/Acq-Load_and_Rel-Store.png)
+
+Let's take a look at the following example with the aforementioned atomic instructions of RC memory model:
+
+![Example of atomic instruction of RC model](../img/gpu_RC_example.png)
+
+In the figure above, Rel Store and Acq Load guarantees that R2 will load NEW value.
+
+**NOTE**: In the variant of the memory model **without scopes**, a release synchronizes with an acquire as long as the acquire returns the value written by the release, irrespective of whether the threads to which they belong are from the same scope or different scope.
+
+#### A Scoped RC Model
+In this approach, acquires and releases just from a same scope are going to synchronize with each other.
+
+#### Release Consistency-directed Coherence (RCC)
+This protocol instead of enforcing SWMR, enforces RC (means that it does not propagate writes to other threads).
+
+In this protocol, writes are written to the L2 upon a release and become visible to another thread when that thread self-invalidates the L1 on an acquire and pulls in new values from the L2.
+
+**Assumption**: Write-back/ Write-Allocate Caches | GPU Scope
+
+- Loads and store that are not marked with acquire or release behave like normal loads and stores in a write-back/ write-allocate L1 caches
+- Upon a store marked release, all dirty blocks in the L1, except the one written by the release, are written to the L2. Then, the block written by the release is written to the L2, ensuring **Load/Store -> Rel Store**.
+- A load marked acquire reads a fresh copy of the block from the L2. Then, all valid blocks in the L1, other than the one read by the acquire, are self-validated, thereby ensuring **Acq Load -> Load/Store**.
+
+The FMS of the L1 cache controller:
+
+![RCC L1 Controller](../img/RCC_L1_controller_FSM.png)
+
+The FSM of the L2 cache controller:
+
+![RCC L2 controller](../img/RCC_L2_Controller.png)
+
+**NOTE**: The RCC protocol can take advantage of CTA scope: a CTA-scoped release does not need to write-back dirty blocks to the L2; a CTA-scoped acquire does not need to self-invalidate any of the valid blocks in the L1.
+
+**NOTE**: Because the L2 does not keep any meta data like sharers or ownership, the L2 cache can be non-inclusive (evictions without informing).
+
+#### RCC - O
+Expensive operations of RCC:
+- Release: causing all dirty lines to be written back to the L2
+- Acquire: causing all valid lines to be self-invalidated
+
+The approach is to reduce the cost of releases and acquires by tracking ownership.
