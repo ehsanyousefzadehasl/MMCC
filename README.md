@@ -10,7 +10,7 @@ Memory consistecy is a precise, architecturally visible definition of the shared
 
 As a part of this consistency model support, the hardware provides cache coherence (coherence).
 
-Problem with shared memory system with several caches is that the cached calues can be potentially out-of-date or incoherent when one of the processors updates its cache values. The aforementioned problem can be seen in the following figure.
+Problem with shared memory system with several caches is that the cached values can be potentially out-of-date or incoherent when one of the processors updates its cache values. The aforementioned problem can be seen in the following figure.
 
 ![Cache coherence problem](img/01-cache_coherence_problem.png)
 

@@ -32,7 +32,7 @@ Every write is not made visible, thus stale values can be observed. These protoc
 
 In having a real vision on cache coherence, it is defined with two invariants:
 - **SWMR (Single Write Multiple Read)**: For any memory location, at any given time, there exists only a single core that may write to that location, or some number of cores that may only read that location.
-- **Data-Value Invariant**: The value of the memory location at the start of an epoch is the same as the value of the memory location at the end of that read-write epoch
+- **Data-Value Invariant**: The value of the memory location at the start of an epoch is the same as the value of the memory location at the end of the last read-write epoch
 
 The following figure gives a vision on read-write epochs.
 
